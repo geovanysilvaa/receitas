@@ -18,17 +18,16 @@ export class RecipeService {
   ) {}
 
   async create(input: CreateRecipeInput): Promise<Recipe> {
-    const title = input.title.trim()
-    if (!title) throw new Error("Title is required")
-    const category = await this.categories.findById(input.categoryId)
-    if (!category) throw new Error("Category does not exist")
     const recipe = createRecipe({
-      title,
+      title: input.title,
       description: input.description,
       ingredients: input.ingredients,
       steps: input.steps,
       categoryId: input.categoryId,
     })
+    if (!recipe.title) throw new Error("Title is required")
+    const category = await this.categories.findById(input.categoryId)
+    if (!category) throw new Error("Category does not exist")
     return this.recipes.create(recipe)
   }
 

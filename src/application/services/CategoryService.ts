@@ -10,11 +10,10 @@ export class CategoryService {
   ) {}
 
   async create(data: { name: string }): Promise<Category> {
-    const name = data.name.trim()
-    if (!name) throw new Error("Name is required")
-    const exists = await this.categories.findByName(name)
+    const category = createCategory({ name: data.name })
+    if (!category.name) throw new Error("Name is required")
+    const exists = await this.categories.findByName(category.name)
     if (exists) throw new Error("Category name must be unique")
-    const category = createCategory({ name })
     return this.categories.create(category)
   }
 
@@ -33,8 +32,7 @@ export class CategoryService {
     data: { name?: string }
   ): Promise<Category> {
     if (data.name) {
-      const name = data.name.trim()
-      const existing = await this.categories.findByName(name)
+      const existing = await this.categories.findByName(data.name)
       if (existing && existing.id !== id)
         throw new Error("Category name must be unique")
     }

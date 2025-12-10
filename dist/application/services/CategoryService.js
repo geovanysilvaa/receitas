@@ -8,13 +8,12 @@ class CategoryService {
         this.recipes = recipes;
     }
     async create(data) {
-        const name = data.name.trim();
-        if (!name)
+        const category = (0, factories_1.createCategory)({ name: data.name });
+        if (!category.name)
             throw new Error("Name is required");
-        const exists = await this.categories.findByName(name);
+        const exists = await this.categories.findByName(category.name);
         if (exists)
             throw new Error("Category name must be unique");
-        const category = (0, factories_1.createCategory)({ name });
         return this.categories.create(category);
     }
     async list() {
@@ -28,8 +27,7 @@ class CategoryService {
     }
     async update(id, data) {
         if (data.name) {
-            const name = data.name.trim();
-            const existing = await this.categories.findByName(name);
+            const existing = await this.categories.findByName(data.name);
             if (existing && existing.id !== id)
                 throw new Error("Category name must be unique");
         }

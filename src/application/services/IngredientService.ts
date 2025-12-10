@@ -6,11 +6,10 @@ export class IngredientService {
   constructor(private readonly ingredients: IIngredientRepository) {}
 
   async create(data: { name: string }): Promise<Ingredient> {
-    const name = data.name.trim()
-    if (!name) throw new Error("Name is required")
-    const exists = await this.ingredients.findByName(name)
+    const ingredient = createIngredient({ name: data.name })
+    if (!ingredient.name) throw new Error("Name is required")
+    const exists = await this.ingredients.findByName(ingredient.name)
     if (exists) throw new Error("Ingredient name must be unique")
-    const ingredient = createIngredient({ name })
     return this.ingredients.create(ingredient)
   }
 
@@ -29,8 +28,7 @@ export class IngredientService {
     data: { name?: string }
   ): Promise<Ingredient> {
     if (data.name) {
-      const name = data.name.trim()
-      const existing = await this.ingredients.findByName(name)
+      const existing = await this.ingredients.findByName(data.name)
       if (existing && existing.id !== id)
         throw new Error("Ingredient name must be unique")
     }

@@ -7,13 +7,12 @@ class IngredientService {
         this.ingredients = ingredients;
     }
     async create(data) {
-        const name = data.name.trim();
-        if (!name)
+        const ingredient = (0, factories_1.createIngredient)({ name: data.name });
+        if (!ingredient.name)
             throw new Error("Name is required");
-        const exists = await this.ingredients.findByName(name);
+        const exists = await this.ingredients.findByName(ingredient.name);
         if (exists)
             throw new Error("Ingredient name must be unique");
-        const ingredient = (0, factories_1.createIngredient)({ name });
         return this.ingredients.create(ingredient);
     }
     async list() {
@@ -27,8 +26,7 @@ class IngredientService {
     }
     async update(id, data) {
         if (data.name) {
-            const name = data.name.trim();
-            const existing = await this.ingredients.findByName(name);
+            const existing = await this.ingredients.findByName(data.name);
             if (existing && existing.id !== id)
                 throw new Error("Ingredient name must be unique");
         }

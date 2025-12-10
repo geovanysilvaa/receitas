@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Container = exports.container = void 0;
+const CategoryMemoryRepository_1 = require("../repositories/memory/CategoryMemoryRepository");
+const RecipeMemoryRepository_1 = require("../repositories/memory/RecipeMemoryRepository");
+const CategoryService_1 = require("../../application/services/CategoryService");
+const RecipeService_1 = require("../../application/services/RecipeService");
+const IngredientService_1 = require("../../application/services/IngredientService");
+const IngredientMemoryRepository_1 = require("../repositories/memory/IngredientMemoryRepository");
 class Container {
     constructor() {
         this.factories = new Map();
@@ -21,12 +27,6 @@ class Container {
     }
 }
 exports.Container = Container;
-const CategoryMemoryRepository_1 = require("../repositories/memory/CategoryMemoryRepository");
-const RecipeMemoryRepository_1 = require("../repositories/memory/RecipeMemoryRepository");
-const CategoryService_1 = require("../../application/services/CategoryService");
-const RecipeService_1 = require("../../application/services/RecipeService");
-const IngredientService_1 = require("../../application/services/IngredientService");
-const IngredientMemoryRepository_1 = require("../repositories/memory/IngredientMemoryRepository");
 const container = new Container();
 exports.container = container;
 container.registerSingleton("CategoryRepository", () => new CategoryMemoryRepository_1.CategoryMemoryRepository());
