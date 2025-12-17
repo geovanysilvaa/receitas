@@ -1,0 +1,1100 @@
+{
+	"log": {
+		"version": "1.2",
+		"creator": {
+			"name": "Insomnia REST Client",
+			"version": "insomnia.desktop.app:v12.1.0"
+		},
+		"entries": [
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 8.482,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:3000/categories",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{ \"name\": \"Massas\" }"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 201,
+					"statusText": "Created",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "100"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"64-osgo2JpctENJflDYCvWpc4z1byA\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:37:32 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 100,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"67be94b5-6820-4e16-8d3d-2a8cce014439\",\"name\":\"Massas\",\"createdAt\":\"2025-12-17T16:37:32.307Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 8.482,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create Category"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 1.965,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:3000/categories",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "OK",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "102"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"66-4quIxGs40+EmV13KZcHJBYVGl00\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:37:35 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 102,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "[{\"id\":\"67be94b5-6820-4e16-8d3d-2a8cce014439\",\"name\":\"Massas\",\"createdAt\":\"2025-12-17T16:37:32.307Z\"}]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 1.965,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "List Categories"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 10.699,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:3000/categories/1de3de75-1f03-419e-ad86-d803d296ea17",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [
+						{
+							"name": "",
+							"value": ""
+						}
+					],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 400,
+					"statusText": "Bad Request",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "30"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"1e-Ta6oFgL4P9HHP+qTwC63BfL5WQQ\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 13:58:02 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 30,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"error\":\"Category not found\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 10.699,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Show Category"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 3.8890000000000002,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:3000/ingredients",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{  \"name\": \"Tomate\" }"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 400,
+					"statusText": "Bad Request",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "42"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"2a-fj+ncPGWIqY/5aA7Llgw/jp7RbE\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 17:12:40 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 42,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"error\":\"Ingredient name must be unique\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 3.8890000000000002,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create Ingredient"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 15.705,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:3000/ingredients",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "OK",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "2"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:37:46 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 2,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "[]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 15.705,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "List Ingredients"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 6.702,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:3000/recipes",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "OK",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "2"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:37:24 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 2,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "[]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 6.702,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "List Recipes"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 1.6360000000000001,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:3000/recipes?categoryName=Sobremesas",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "OK",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "526"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"20e-47Jh9vaVwllhwlRkAoQAzheq360\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:07:19 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 526,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "[{\"id\":\"5fd063f2-97bc-4451-86e2-aa4a3a50326a\",\"title\":\"Pav� de chocolate\",\"description\":\"Camadas de biscoito e creme\",\"ingredients\":[{\"ingredientId\":\"011597e6-2fa5-445e-ab8e-b119cd7640e5\",\"quantity\":200,\"unit\":\"g\"},{\"ingredientId\":\"27d714a9-1145-46d5-af97-b4177d94c3ad\",\"quantity\":300,\"unit\":\"ml\"},{\"ingredientId\":\"0a19248e-1019-4937-a8b3-9f328ca0124a\",\"quantity\":100,\"unit\":\"g\"}],\"steps\":[\"misturar\",\"montar\",\"gelar\"],\"servings\":4,\"categoryId\":\"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\"createdAt\":\"2025-12-17T16:07:10.942Z\"}]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 1.6360000000000001,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "List Recipes [CategoryName]"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 12.895,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:3000/recipes/5fd063f2-97bc-4451-86e2-aa4a3a50326a",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [
+						{
+							"name": "",
+							"value": ""
+						}
+					],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "OK",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "524"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"20c-AiconncJS5JpU7GuV6pmDhDwzno\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:08:20 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 524,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"5fd063f2-97bc-4451-86e2-aa4a3a50326a\",\"title\":\"Pav� de chocolate\",\"description\":\"Camadas de biscoito e creme\",\"ingredients\":[{\"ingredientId\":\"011597e6-2fa5-445e-ab8e-b119cd7640e5\",\"quantity\":200,\"unit\":\"g\"},{\"ingredientId\":\"27d714a9-1145-46d5-af97-b4177d94c3ad\",\"quantity\":300,\"unit\":\"ml\"},{\"ingredientId\":\"0a19248e-1019-4937-a8b3-9f328ca0124a\",\"quantity\":100,\"unit\":\"g\"}],\"steps\":[\"misturar\",\"montar\",\"gelar\"],\"servings\":4,\"categoryId\":\"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\"createdAt\":\"2025-12-17T16:07:10.942Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 12.895,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Show Recipe"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 2.234,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:3000/recipes",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n  \"title\": \"Bolo de Cenoura\",\n  \"description\": \"Bolo fofinho com cobertura de chocolate\",\n  \"categoryId\": \"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\n  \"ingredients\": [\n    {\n      \"name\": \"Cenoura\",\n      \"quantity\": 3,\n      \"unit\": \"unidades\"\n    },\n    {\n      \"name\": \"Farinha de Trigo\",\n      \"quantity\": 2,\n      \"unit\": \"xícaras\"\n    },\n    {\n      \"name\": \"Ovo\",\n      \"quantity\": 3,\n      \"unit\": \"unidades\"\n    }\n  ],\n  \"steps\": [\n    \"Bata as cenouras, os ovos e o óleo no liquidificador.\",\n    \"Misture com a farinha e o açúcar.\",\n    \"Asse por 40 minutos.\"\n  ],\n  \"servings\": 8\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 201,
+					"statusText": "Created",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "636"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"27c-5Tl2u0Aw8tkwzZ62s5YDEsQImro\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:12:16 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 636,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"a0a27260-7220-4141-b539-e70911e37cab\",\"title\":\"Bolo de Cenoura\",\"description\":\"Bolo fofinho com cobertura de chocolate\",\"ingredients\":[{\"ingredientId\":\"f6243df6-4ede-4192-93f9-f8e670eaa8de\",\"quantity\":3,\"unit\":\"unidades\"},{\"ingredientId\":\"3a1bfb9c-c8f2-48df-8770-30a801ab2203\",\"quantity\":2,\"unit\":\"xícaras\"},{\"ingredientId\":\"333235cb-8cbb-4b10-b0a8-d3618b2f327e\",\"quantity\":3,\"unit\":\"unidades\"}],\"steps\":[\"Bata as cenouras, os ovos e o óleo no liquidificador.\",\"Misture com a farinha e o açúcar.\",\"Asse por 40 minutos.\"],\"servings\":8,\"categoryId\":\"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\"createdAt\":\"2025-12-17T16:12:16.572Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 2.234,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create Recipe [ bolo de cenoura ]"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 2.642,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:3000/recipes",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n  \"title\": \"Espaguete à Bolonhesa\",\n  \"description\": \"Um clássico italiano prático e delicioso\",\n  \"categoryId\": \"734b712c-9560-4d61-b2aa-3163c792484a\",\n  \"ingredients\": [\n    {\n      \"name\": \"Espaguete\",\n      \"quantity\": 500,\n      \"unit\": \"g\"\n    },\n    {\n      \"name\": \"Carne Moída\",\n      \"quantity\": 500,\n      \"unit\": \"g\"\n    },\n    {\n      \"name\": \"Molho de Tomate\",\n      \"quantity\": 340,\n      \"unit\": \"g\"\n    },\n    {\n      \"name\": \"Cebola\",\n      \"quantity\": 1,\n      \"unit\": \"unidade\"\n    },\n    {\n      \"name\": \"Alho\",\n      \"quantity\": 2,\n      \"unit\": \"dentes\"\n    }\n  ],\n  \"steps\": [\n    \"Cozinhe o espaguete em água fervente com sal até ficar al dente.\",\n    \"Em outra panela, refogue a cebola e o alho picados.\",\n    \"Acrescente a carne moída e frite até dourar.\",\n    \"Adicione o molho de tomate e deixe apurar por alguns minutos.\",\n    \"Misture o molho ao macarrão escorrido e sirva.\"\n  ],\n  \"servings\": 4\n}\n"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 201,
+					"statusText": "Created",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "970"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"3ca-Okk77UQibbeHrBzvBQZKKvLM8hc\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:16:01 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 970,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"57d9034a-02e1-4904-a183-7ad7744e78a9\",\"title\":\"Espaguete à Bolonhesa\",\"description\":\"Um clássico italiano prático e delicioso\",\"ingredients\":[{\"ingredientId\":\"7a3aed84-3573-47bc-9509-a5e74911ff4d\",\"quantity\":500,\"unit\":\"g\"},{\"ingredientId\":\"87a04cdc-48e2-4d4c-8d4e-ff9a2fd94bf7\",\"quantity\":500,\"unit\":\"g\"},{\"ingredientId\":\"0b6de1f7-610f-4303-bb53-f228f5b8e439\",\"quantity\":340,\"unit\":\"g\"},{\"ingredientId\":\"c95751aa-a3a6-4c85-8d49-7b2cb5c0b4b1\",\"quantity\":1,\"unit\":\"unidade\"},{\"ingredientId\":\"75174c71-59c4-4168-8a62-70b65afa985d\",\"quantity\":2,\"unit\":\"dentes\"}],\"steps\":[\"Cozinhe o espaguete em água fervente com sal até ficar al dente.\",\"Em outra panela, refogue a cebola e o alho picados.\",\"Acrescente a carne moída e frite até dourar.\",\"Adicione o molho de tomate e deixe apurar por alguns minutos.\",\"Misture o molho ao macarrão escorrido e sirva.\"],\"servings\":4,\"categoryId\":\"734b712c-9560-4d61-b2aa-3163c792484a\",\"createdAt\":\"2025-12-17T16:16:01.407Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 2.642,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create Recipe [ Espaguete à Bolonhesa ]"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 1.76,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:3000/recipes",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n  \"title\": \"Pudim de Leite Condensado\",\n  \"description\": \"Clássico pudim cremoso com calda de caramelo\",\n  \"categoryId\": \"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\n  \"ingredients\": [\n    {\n      \"name\": \"Leite Condensado\",\n      \"quantity\": 1,\n      \"unit\": \"lata\"\n    },\n    {\n      \"name\": \"Ovo\",\n      \"quantity\": 3,\n      \"unit\": \"unidades\"\n    },\n    {\n      \"name\": \"Leite Integral\",\n      \"quantity\": 395,\n      \"unit\": \"ml\"\n    },\n    {\n      \"name\": \"Açúcar\",\n      \"quantity\": 1,\n      \"unit\": \"xícara\"\n    }\n  ],\n  \"steps\": [\n    \"Derreta o açúcar na forma de pudim para fazer a calda.\",\n    \"Bata o leite condensado, o leite e os ovos no liquidificador.\",\n    \"Despeje a mistura na forma caramelizada.\",\n    \"Cubra com papel alumínio e asse em banho-maria por 1h30.\",\n    \"Deixe gelar antes de desenformar.\"\n  ],\n  \"servings\": 8\n}\n"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 201,
+					"statusText": "Created",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "874"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"36a-eLLbNWxLdVpgY4Vh6kALHfhLG6M\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:15:00 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 874,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"222b7dc4-4c52-4cf6-be9f-2cf3ff92ab90\",\"title\":\"Pudim de Leite Condensado\",\"description\":\"Clássico pudim cremoso com calda de caramelo\",\"ingredients\":[{\"ingredientId\":\"622882d0-4996-4597-aada-6a6d76540870\",\"quantity\":1,\"unit\":\"lata\"},{\"ingredientId\":\"333235cb-8cbb-4b10-b0a8-d3618b2f327e\",\"quantity\":3,\"unit\":\"unidades\"},{\"ingredientId\":\"03b43379-6b11-4961-aac8-9ee9572f10f6\",\"quantity\":395,\"unit\":\"ml\"},{\"ingredientId\":\"a6c29228-0305-4c39-9793-8898fcc2154e\",\"quantity\":1,\"unit\":\"xícara\"}],\"steps\":[\"Derreta o açúcar na forma de pudim para fazer a calda.\",\"Bata o leite condensado, o leite e os ovos no liquidificador.\",\"Despeje a mistura na forma caramelizada.\",\"Cubra com papel alumínio e asse em banho-maria por 1h30.\",\"Deixe gelar antes de desenformar.\"],\"servings\":8,\"categoryId\":\"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\"createdAt\":\"2025-12-17T16:15:00.494Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 1.76,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create Recipe [ Pudim de Leite Condensado ]"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 4.144,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:3000/recipes",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n  \"title\": \"Mousse de Maracujá\",\n  \"description\": \"Sobremesa refrescante e fácil de fazer\",\n  \"categoryId\": \"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\n  \"ingredients\": [\n    {\n      \"name\": \"Leite Condensado\",\n      \"quantity\": 1,\n      \"unit\": \"lata\"\n    },\n    {\n      \"name\": \"Creme de Leite\",\n      \"quantity\": 1,\n      \"unit\": \"lata\"\n    },\n    {\n      \"name\": \"Suco de Maracujá Concentrado\",\n      \"quantity\": 1,\n      \"unit\": \"lata\"\n    }\n  ],\n  \"steps\": [\n    \"Bata todos os ingredientes no liquidificador por 5 minutos.\",\n    \"Despeje em uma travessa ou taças individuais.\",\n    \"Leve à geladeira por pelo menos 4 horas antes de servir.\"\n  ],\n  \"servings\": 6\n}\n"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 201,
+					"statusText": "Created",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "681"
+						},
+						{
+							"name": "ETag",
+							"value": "W/\"2a9-qPkYRXKjzdrHDyvhavT7HFEViAI\""
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 16:14:07 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 681,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"a2bcdc9b-6f63-4e97-ac7a-d722a799b2fa\",\"title\":\"Mousse de Maracujá\",\"description\":\"Sobremesa refrescante e fácil de fazer\",\"ingredients\":[{\"ingredientId\":\"622882d0-4996-4597-aada-6a6d76540870\",\"quantity\":1,\"unit\":\"lata\"},{\"ingredientId\":\"0db62dcf-f9ce-4d6c-83b4-6ec9bd0d641b\",\"quantity\":1,\"unit\":\"lata\"},{\"ingredientId\":\"0736a8a4-c3dc-49d4-9f76-ee8b9e87d8a1\",\"quantity\":1,\"unit\":\"lata\"}],\"steps\":[\"Bata todos os ingredientes no liquidificador por 5 minutos.\",\"Despeje em uma travessa ou taças individuais.\",\"Leve à geladeira por pelo menos 4 horas antes de servir.\"],\"servings\":6,\"categoryId\":\"534a09f8-6fc9-4dd6-a1c8-cabf31b4dd7a\",\"createdAt\":\"2025-12-17T16:14:07.069Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 4.144,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create Recipe [mousse de maracujá ]"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 0,
+				"request": {
+					"method": "PUT",
+					"url": "http://localhost:3000/recipes/3dff9a9f-2c10-4567-b51a-4dbe42c9d04f",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n  \"categoryId\": \"496fbb17-5667-469e-897d-af2fbe5c92bd\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 0,
+					"statusText": "Error",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [],
+					"content": {
+						"size": 0,
+						"mimeType": "",
+						"text": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 0,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Update Recipe"
+			},
+			{
+				"startedDateTime": "2025-12-17T18:02:54.186Z",
+				"time": 0.977,
+				"request": {
+					"method": "DELETE",
+					"url": "http://localhost:3000/recipes/547e7294-3614-4acb-a881-dabe98fef8e6",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.1.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 204,
+					"statusText": "No Content",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 17 Dec 2025 14:45:30 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"name": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"content": {
+						"size": 0,
+						"mimeType": "",
+						"text": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 0.977,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Delete Recipe"
+			}
+		]
+	}
+}
