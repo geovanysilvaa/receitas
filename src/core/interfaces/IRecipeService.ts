@@ -6,4 +6,5 @@ export interface IRecipeService {
   create(input: CreateRecipeInput): Promise<Recipe>
   update(id: string, data: Partial<CreateRecipeInput>): Promise<Recipe>
   delete(id: string): Promise<void>
+  escalonamento(id:string,servings:number): Promise<Recipe> //Primeira emplementacao 1
 }

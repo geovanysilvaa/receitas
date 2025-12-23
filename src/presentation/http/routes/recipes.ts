@@ -3,6 +3,25 @@ import { IRecipeService } from "../../../core/interfaces/IRecipeService.js"
 
 export function recipesRoutes(service: IRecipeService) {
   const router = Router()
+  
+  ///edpoint nova do escalonamento
+  router.post("/:id/scale", async (req, res, next) => {
+    try {
+      const items = await service.escalonamento(req.params.id, req.body.servings)
+      res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  })
+  
+  router.get("/:id", async (req, res, next) => {
+    try {
+      const item = await service.get(req.params.id)
+      res.json(item)
+    } catch (error) {
+      next(error)
+    }
+  })
 
   router.get("/", async (req, res, next) => {
     try {
@@ -17,15 +36,8 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.get("/:id", async (req, res, next) => {
-    try {
-      const item = await service.get(req.params.id)
-      res.json(item)
-    } catch (error) {
-      next(error)
-    }
-  })
 
+  
   router.post("/", async (req, res, next) => {
     try {
       const item = await service.create({
@@ -33,10 +45,10 @@ export function recipesRoutes(service: IRecipeService) {
         description: req.body.description,
         ingredients: Array.isArray(req.body.ingredients)
           ? req.body.ingredients.map((i: any) => ({
-              name: String(i?.name ?? ""),
-              quantity: Number(i?.quantity ?? 0),
-              unit: String(i?.unit ?? ""),
-            }))
+            name: String(i?.name ?? ""),
+            quantity: Number(i?.quantity ?? 0),
+            unit: String(i?.unit ?? ""),
+          }))
           : [],
         steps: Array.isArray(req.body.steps) ? req.body.steps.map(String) : [],
         servings: Number(req.body.servings ?? 0),
