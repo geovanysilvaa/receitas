@@ -4,6 +4,7 @@ import { Recipe, CreateRecipeInput } from "./models.js"
 import { CategoryService } from "./CategoryService.js"
 import { IngredientService } from "./IngredientService.js"
 import { IRecipeService } from "./interfaces/IRecipeService.js"
+import { error } from "node:console"
 
 export class RecipeService implements IRecipeService {
   private categoryService = new CategoryService()
@@ -193,7 +194,7 @@ export class RecipeService implements IRecipeService {
         }
         novo.push(novoR);
       })
-      
+
       let receitaEscalonada: Recipe = {
         ...procura,
         ingredients: novo,
@@ -201,5 +202,36 @@ export class RecipeService implements IRecipeService {
       }
       return receitaEscalonada
     }
+  }//
+///Novo metodo lista de compra
+  async listaCompra(ids: string[]): Promise<{ ingredientId: string; quantity: number; unit: string }[]> {
+
+    let lista: { ingredientId: string; quantity: number; unit: string }[] = []
+
+    for (const id of ids) {
+      const existe = store.recipes.find(itens => itens.id == id)
+
+      if (!existe) {
+        throw new Error('ID not found')
+      }
+
+      for (const ingrediente of existe.ingredients) {
+        let encontrado = false
+        for (const item of lista) {
+          if (ingrediente.ingredientId == item.ingredientId && ingrediente.unit == item.unit) {
+            encontrado = true
+            item.quantity = item.quantity + ingrediente.quantity
+          }
+        }
+        if (encontrado == false) {
+          lista.push({
+            ingredientId: ingrediente.ingredientId,
+            quantity: ingrediente.quantity,
+            unit: ingrediente.unit
+          })
+        }
+      }
+    }
+    return lista
   }//
 }
