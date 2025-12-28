@@ -1,3 +1,4 @@
+import { promises } from "node:dns";
 import { Recipe, CreateRecipeInput } from "../models.js"
 
 export interface IRecipeService {
@@ -6,6 +7,8 @@ export interface IRecipeService {
   create(input: CreateRecipeInput): Promise<Recipe>
   update(id: string, data: Partial<CreateRecipeInput>): Promise<Recipe>
   delete(id: string): Promise<void>
-  escalonamento(id:string,servings:number): Promise<Recipe> //Primeira emplementção 1
-  listaCompra(id:string[]):Promise<{ ingredientId: string; quantity: number; unit: string }[]>//Sengunda emplementação 2
+  escalonamento(id: string, servings: number): Promise<Recipe> //Primeira emplementação 1
+  listaCompra(id: string[]): Promise<{ ingredientId: string; quantity: number; unit: string }[]>//Sengunda emplementação 2
+  publicar(id: string): Promise<Recipe>///Necessario pra emplementação status
+  archivar(id:string): Promise<Recipe>///Necessario pra emplementação status
 }
