@@ -3,18 +3,38 @@ import { IRecipeService } from "../../../core/interfaces/IRecipeService.js"
 
 export function recipesRoutes(service: IRecipeService) {
   const router = Router()
-
-  ///endpoint nova do escalonamento
+   ///endpoint nova de public/status
+  router.patch("/:id/public", async (req, res, next) => {
+    try {
+      const item = await service.publicar(req.params.id)
+      res.json(item)
+    } catch (error) {
+      next(error)
+    }
+  })
+  ///
+  ///endpoint nova de archive/status
+  router.patch("/:id/archived", async (req, res, next) => {
+    try {
+      const item = await service.archivar(req.params.id)
+      res.json(item)
+    } catch (error) {
+      next(error)
+    }
+  })
+///
+  ///endpoint nova do escalonamento 
   router.post("/:id/scale", async (req, res, next) => {
     try {
-      const items = await service.escalonamento(req.params.id, req.body.servings)
+      const servings = Number(req.body.servings)
+      const items = await service.escalonamento(req.params.id,servings)
       res.json(items)
     } catch (error) {
       next(error)
     }
   })
-
-  router.get("/", async (req, res, next) => {
+///
+  router.get("/", async (req, res, next) => {/// List Recipes [CategoryName]
     try {
       const items = await service.list({
         categoryId: req.query.categoryId as string | undefined,
@@ -27,7 +47,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.get("/:id", async (req, res, next) => {
+  router.get("/:id", async (req, res, next) => {/// Show Recipe
     try {
       const item = await service.get(req.params.id)
       res.json(item)
@@ -38,7 +58,7 @@ export function recipesRoutes(service: IRecipeService) {
 
   router.post("/", async (req, res, next) => {
     try {
-      if (Array.isArray(req.body.recipeIds)) {///Lista de compras ja me endpoint 
+      if (Array.isArray(req.body.recipeIds)) {///Lista de compras. Reaproveitando endpoint
         const items = await service.listaCompra(req.body.recipeIds)
         res.status(201).json(items)
       } else {

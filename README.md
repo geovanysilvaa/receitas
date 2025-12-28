@@ -130,11 +130,15 @@ Códigos de erro: as validações retornam `400` com `{ error: "mensagem" }` (mi
         "servings": 8,
         "categoryId": "<ID_DA_CATEGORIA>"
       }
+  - Publicar receita
+    - Método: `PATCH`  
+    - URL: `/recipes/:id/public`
+
       ```
 - Listagens e filtros:
-  - `GET /categories`, `GET /ingredients`, `GET /recipes`
-  - `GET /recipes?categoryId=<ID>` para filtrar por categoria
-  - `GET /recipes?search=<texto>` para buscar por título/descrição/ingredientes
+  - `GET /categories`, `GET /ingredients`, `GET /recipes` — somente published
+  - `GET /recipes?categoryId=<ID>` para filtrar por categoria somente published
+  - `GET /recipes?search=<texto>` para buscar por título/descrição/ingredientes somente published
 - Dicas de uso:
   - Crie um ambiente com variável `base_url` e use `{{ base_url }}` nas requisições.
   - Salve exemplos de corpo usando os arquivos em `requests/`.
@@ -205,3 +209,82 @@ receitas/
 - `npm run dev` — inicia em modo desenvolvimento (ts-node)
 - `npm run build` — compila TypeScript
 - `npm start` — executa o build compilado
+
+---
+
+# Funcionalidades Adicionadas (Evolução do Sistema)
+
+- Conforme solicitado no enunciado do trabalho, o sistema foi evoluído com novas funcionalidades e regras de negócio além do CRUD básico de Categorias, Ingredientes e  Receitas.
+
+- Essas evoluções aumentam a complexidade do domínio e aplicam regras de negócio diretamente na camada de serviço (`core`), respeitando a arquitetura em camadas e o princípio da Inversão de Dependência.
+
+---
+
+## Escalonamento Inteligente de Receitas
+
+- Endpoint: `POST /recipes/:id/scale`
+- Permite recalcular automaticamente os ingredientes de uma receita com base em uma nova quantidade de porções.
+- O usuário informa o número de porções desejadas (`servings`) no corpo da requisição.
+- O sistema:
+  - Busca a receita original
+  - Calcula proporcionalmente as quantidades dos ingredientes
+  - Retorna **uma nova versão da receita completa escalonada**
+- A receita original armazenada **não é alterada nem persistida**.
+- O número de porções deve ser maior que zero.
+- Caso a receita não exista, o sistema retorna erro apropriado.
+
+Exemplo de requisição:
+
+```json
+{
+  "servings": 4
+}
+```
+---
+
+### Geração de Lista de Compras Consolidada
+
+- Funcionalidade implementada sem criação de novos recursos persistidos.
+- A lista de compras é gerada como resposta a uma requisição HTTP existente.
+- O sistema recebe uma lista de IDs de receitas.
+- O sistema:
+  - Busca todas as receitas informadas
+  - Consolida os ingredientes
+  - Soma as quantidades de ingredientes iguais, considerando:
+    - Mesmo ingrediente
+    - Mesma unidade de medida
+- Ingredientes iguais com unidades diferentes aparecem separadamente.
+- Caso algum ID de receita seja inválido, o sistema retorna erro.
+- A resposta contém apenas a lista de compras consolidada, de forma clara e organizada.
+
+Exemplo de requisição:
+
+```json
+{
+  "recipeIds": [
+    "id-da-receita-1",
+    "id-da-receita-2"
+  ]
+}
+```
+---
+
+### Estados da Receita (Workflow Simples)
+
+- O sistema implementa um fluxo de estados para as receitas, composto por:
+  - `draft` (rascunho)
+  - `published` (publicada)
+  - `archived` (arquivada)
+
+- Regras de negócio aplicadas:
+  - Apenas receitas no estado `published` aparecem nas listagens públicas.
+  - Receitas `draft` podem ser editadas normalmente.
+  - Receitas published não podem ser excluídas, apenas arquivadas.
+  - Receitas archived não podem ser editadas.
+- Todas as validações de estado são aplicadas na camada de serviço (core).
+- Quando o corpo da requisição contém recipeIds, o endpoint retorna uma lista de compras consolidada em vez de criar uma receita.
+### Endpoints relacionados:
+- `PATCH /recipes/:id/public` — publicar receitas
+- `PATCH /recipes/:id/archived` — arquivar receitas
+
+- O projeto possui coleções de requisições HTTP na pasta requests/ para testar todas as funcionalidades implementadas
