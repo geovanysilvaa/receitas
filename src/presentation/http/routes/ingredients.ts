@@ -4,7 +4,7 @@ import { IIngredientService } from "../../../core/interfaces/IIngredientService.
 export function ingredientsRoutes(service: IIngredientService) {
   const router = Router()
 
-  router.get("/", async (_req, res, next) => {
+  router.get("/", async (_req, res, next) => {//List Ingredients
     try {
       const items = await service.list()
       res.json(items)
@@ -13,7 +13,7 @@ export function ingredientsRoutes(service: IIngredientService) {
     }
   })
 
-  router.get("/:id", async (req, res, next) => {
+  router.get("/:id", async (req, res, next) => {//Show Ingredient
     try {
       const item = await service.get(req.params.id)
       res.json(item)
@@ -22,7 +22,7 @@ export function ingredientsRoutes(service: IIngredientService) {
     }
   })
 
-  router.post("/", async (req, res, next) => {
+  router.post("/", async (req, res, next) => {//Create Ingredients
     try {
       const item = await service.create({
         name: String(req.body.name ?? ""),
@@ -33,7 +33,7 @@ export function ingredientsRoutes(service: IIngredientService) {
     }
   })
 
-  router.put("/:id", async (req, res, next) => {
+  router.put("/:id", async (req, res, next) => {//Update Ingredient
     try {
       const item = await service.update(req.params.id, {
         name: req.body.name,
@@ -44,7 +44,7 @@ export function ingredientsRoutes(service: IIngredientService) {
     }
   })
 
-  router.delete("/:id", async (req, res, next) => {
+  router.delete("/:id", async (req, res, next) => {//Delete Ingredient
     try {
       await service.delete(req.params.id)
       res.status(204).send()

@@ -34,7 +34,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 ///
-  router.get("/", async (req, res, next) => {/// List Recipes [CategoryName]
+  router.get("/", async (req, res, next) => {/// List Recipe[CategoryName] e List Recipes
     try {
       const items = await service.list({
         categoryId: req.query.categoryId as string | undefined,
@@ -62,7 +62,7 @@ export function recipesRoutes(service: IRecipeService) {
         const items = await service.listaCompra(req.body.recipeIds)
         res.status(201).json(items)
       } else {
-        const item = await service.create({
+        const item = await service.create({//Create Recipe
           title: String(req.body.title ?? ""),
           description: req.body.description,
           ingredients: Array.isArray(req.body.ingredients)
@@ -83,7 +83,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.put("/:id", async (req, res, next) => {
+  router.put("/:id", async (req, res, next) => {//Update Recipe
     try {
       const item = await service.update(req.params.id, {
         title: req.body.title,
@@ -99,7 +99,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.delete("/:id", async (req, res, next) => {
+  router.delete("/:id", async (req, res, next) => {//Delete Recipe
     try {
       await service.delete(req.params.id)
       res.status(204).send()
