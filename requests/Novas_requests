@@ -742,11 +742,11 @@ collection:
         store: true
       rebuildPath: true
   - url: "{{baseUrl}}/recipes"
-    name: New Request
+    name: Create Recipe [ Cookies de Chocolate ]
     meta:
       id: req_aab3aa7557964d61b04fb665690e452b
       created: 1767538419280
-      modified: 1767542558107
+      modified: 1767543523287
       isPrivate: false
       description: ""
       sortKey: -1762875335508.1875
