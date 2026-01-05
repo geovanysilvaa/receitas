@@ -171,9 +171,14 @@ Códigos de erro: as validações retornam `400` com `{ error: "mensagem" }` (mi
 
 ## Estrutura do projeto
 ```
+
 receitas/
 ├─ src/
 │  ├─ core/
+│  │  ├─ interfaces/
+│  │  │  ├─ ICategoryService.ts
+│  │  │  ├─ IIngredientService.ts
+│  │  │  └─ IRecipeService.ts
 │  │  ├─ CategoryService.ts
 │  │  ├─ IngredientService.ts
 │  │  ├─ RecipeService.ts
@@ -181,21 +186,21 @@ receitas/
 │  │  └─ store.ts
 │  └─ presentation/
 │     └─ http/
-│        ├─ middlewares/errorHandler.ts
-│        ├─ routes/categories.ts
-│        ├─ routes/ingredients.ts
-│        ├─ routes/recipes.ts
+│        ├─ middlewares/
+│        │  └─ errorHandler.ts
+│        ├─ routes/
+│        │  ├─ categories.ts
+│        │  ├─ ingredients.ts
+│        │  └─ recipes.ts
 │        └─ server.ts
 ├─ requests/
-│  ├─ category.json
-│  ├─ ingredient.json
-│  ├─ ingredient-update.json
-│  ├─ recipe.json
+│  ├─ Novas_request
 │  ├─ Insomnia_recipes_requests.yaml
 │  └─ recipes_requests.yaml
 ├─ package.json
 ├─ tsconfig.json
 └─ README.md
+
 ```
 
 ## Composição do servidor
@@ -267,24 +272,70 @@ Exemplo de requisição:
   ]
 }
 ```
+
+Exemplo de resposta
+```json
+[
+  { "ingredientId": "1",  "quantity": 500, "unit": "ml" },
+  { "ingredientId": "2",  "quantity": 6, "unit": "un" },
+  { "ingredientId": "3",  "quantity": 200, "unit": "g" }
+]
+```
+Exemplo de Erro
+```json
+// Receita não publicada
+{
+  "error": "Recipe id-da-receita-1 is not published"
+}
+
+// Receita não encontrada
+{
+  "error": "ID not found"
+}
+```
 ---
 
-### Estados da Receita (Workflow Simples)
+## Estados da Receita (Workflow Simples)
 
-- O sistema implementa um fluxo de estados para as receitas, composto por:
-  - `draft` (rascunho)
-  - `published` (publicada)
-  - `archived` (arquivada)
+O sistema implementa um fluxo de estados para as receitas, composto por:
 
-- Regras de negócio aplicadas:
-  - Apenas receitas no estado `published` aparecem nas listagens públicas.
-  - Receitas `draft` podem ser editadas normalmente.
-  - Receitas published não podem ser excluídas, apenas arquivadas.
-  - Receitas archived não podem ser editadas.
-- Todas as validações de estado são aplicadas na camada de serviço (core).
-- Quando o corpo da requisição contém recipeIds, o endpoint retorna uma lista de compras consolidada em vez de criar uma receita.
-### Endpoints relacionados:
-- `PATCH /recipes/:id/public` — publicar receitas
-- `PATCH /recipes/:id/archived` — arquivar receitas
+- `draft` (rascunho)  
+- `published` (publicada)  
+- `archived` (arquivada)  
 
-- O projeto possui coleções de requisições HTTP na pasta requests/ para testar todas as funcionalidades implementadas
+### Regras de Negócio por Status
+
+| Status       | Pode Listar | Pode Editar | Pode Deletar | Pode Arquivar | Pode Publicar |
+|-------------|------------|------------|--------------|---------------|---------------|
+| **draft**    |  Não     |  Sim     |  Sim        |  Não        |  Sim        |
+| **published**|  Sim     |  Não     |  Não        |  Sim        |  Não        |
+| **archived** |  Não     |  Não     |  Não        |  Não        |  Não        |
+
+### Endpoints Relacionados
+- `PATCH /recipes/:id/public` — Publicar receitas (apenas draft)  
+- `PATCH /recipes/:id/archived` — Arquivar receitas (apenas published)  
+
+### Exemplos de Erro
+
+```json
+// Tentativa de deletar uma receita publicada
+{
+  "error": "You can only delete draft recipes"
+}
+
+// Tentativa de editar uma receita archived
+{
+  "error": "Only draft recipes can be edited"
+}
+
+// Tentativa de escalar uma receita draft
+{
+  "error": "You can only scale published recipes"
+}
+
+// Receita não encontrada
+{
+  "error": "Recipe not found"
+}
+
+
