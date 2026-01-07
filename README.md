@@ -194,7 +194,10 @@ receitas/
 │        │  └─ recipes.ts
 │        └─ server.ts
 ├─ requests/
-│  ├─ Novas_request
+│  ├─ category.json          
+│  ├─ ingredient.json         
+│  ├─ ingredient-update.json   
+│  ├─ recipe.json           
 │  ├─ Insomnia_recipes_requests.yaml
 │  └─ recipes_requests.yaml
 ├─ package.json
@@ -305,15 +308,22 @@ O sistema implementa um fluxo de estados para as receitas, composto por:
 
 ### Regras de Negócio por Status
 
-| Status       | Pode Listar | Pode Editar | Pode Deletar | Pode Arquivar | Pode Publicar |
-|-------------|------------|------------|--------------|---------------|---------------|
-| **draft**    |  Não     |  Sim     |  Sim        |  Não        |  Sim        |
-| **published**|  Sim     |  Não     |  Não        |  Sim        |  Não        |
-| **archived** |  Não     |  Não     |  Não        |  Não        |  Não        |
+| Status       | Listar | Editar | Deletar | Arquivar | Publicar | Escalonar |
+|--------------|--------|--------|---------|----------|----------|-----------|
+| **draft**    |  Não   |  Sim   |  Sim    |  Não     |  Sim     |  Não |
+| **published**|  Sim   |  Não   |  Não    |  Sim     |  Não     |  Sim |
+| **archived** |  Não   |  Não   |  Não    |  Não     |  Não     |  Não |
+
+
+> Observação:
+> - Apenas receitas `published` aparecem nas listagens públicas.
+> - Receitas `draft` só podem ser manipuladas via endpoints internos/admin.
+> - Receitas `archived` não podem ser alteradas, escalonadas ou deletadas.
 
 ### Endpoints Relacionados
 - `PATCH /recipes/:id/public` — Publicar receitas (apenas draft)  
 - `PATCH /recipes/:id/archived` — Arquivar receitas (apenas published)  
+- `POST /recipes/:id/scale` — Escalonar receita (apenas published)  
 
 ### Exemplos de Erro
 
@@ -337,5 +347,13 @@ O sistema implementa um fluxo de estados para as receitas, composto por:
 {
   "error": "Recipe not found"
 }
+``` 
+---
 
+## Testes e Coleções de Requisições
 
+- Todas as funcionalidades podem ser testadas usando as coleções na pasta `requests/`:
+  - **Insomnia**: `Insomnia_recipes_requests.yaml` — coleção completa pronta para importação.
+  - **Exemplos genéricos**: `recipes_requests.yaml` — especificação de endpoints e exemplos de requisições.
+
+> Observação: Basta ajustar a variável `base_url` para apontar para `http://localhost:3000` (ou porta configurada) para executar todos os testes.

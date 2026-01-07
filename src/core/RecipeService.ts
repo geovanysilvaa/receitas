@@ -42,20 +42,20 @@ export class RecipeService implements IRecipeService {
         })
       })
     }
-    ///Filtra apenas receitas publicas
+    /* Filtra apenas receitas publicas */
     let fReceita = items.filter(receitas => receitas.status == 'published');
     return fReceita;
-    ///
+
   }
 
   async get(id: string): Promise<Recipe> {
     const found = store.recipes.find(r => r.id === id)
     if (!found) throw new Error("Recipe not found")
-    ///Verificação status da receitas apenas publicas
+    /* Verificação status da receitas apenas publicas */
     if (found.status !== "published") {
       throw new Error("Only published recipes can be accessed");
     }
-    ///
+  
     return found
   }
 
@@ -63,11 +63,11 @@ export class RecipeService implements IRecipeService {
     const title = input.title.trim()
     if (!title) throw new Error("Title is required")
 
-    // Validate Category
+    /* Validate Category */
     const category = await this.categoryService.get(input.categoryId).catch(() => null)
     if (!category) throw new Error("Category does not exist")
 
-    // Process Ingredients
+    /* Process Ingredients */
     const incoming = Array.isArray(input.ingredients)
       ? input.ingredients.map((i) => ({
         name: String(i.name ?? "").trim(),
@@ -105,7 +105,7 @@ export class RecipeService implements IRecipeService {
       servings,
       categoryId: input.categoryId,
       createdAt: new Date(),
-      status: 'draft'///Propriedade status começa com draft
+      status: 'draft'/* Propriedade status começa com rascunho */
     }
 
     store.recipes.push(recipe)
@@ -118,11 +118,11 @@ export class RecipeService implements IRecipeService {
 
     const current = store.recipes[idx]
 
-    ///Verificação status receitas so pode editar receitas draft
+    /* Verificação status receitas so pode editar receitas draft */
     if (current.status !== "draft") {
       throw new Error("Only draft recipes can be edited");
     }
-    ///
+    
 
     const updated = { ...current }
 
@@ -185,80 +185,80 @@ export class RecipeService implements IRecipeService {
     const copia = store.recipes[idx]
     if (idx < 0) throw new Error("ID does not exist")
 
-    ///Verificação status receitas so pode deletar receitas draft
+    /* Verificação status receitas so podem deletar receitas em racunho */
     if (copia.status !== "draft") {
       throw new Error('You can only delete draft recipes')
     }
-    ///
+  
     store.recipes.splice(idx, 1)
   }
 
-  ///novo metodo de escalonamento
-  async escalonamento(id: string, servings: number): Promise<Recipe> {
-    let procura = store.recipes.find((c) => c.id == id);//verifica de a receita existe se existe retorna a receita se nao returna undefined
-    if (!procura) {//lança o erro se for undefined
+  /* novo metodo de escalonamento */
+  async scaleRecipes(id: string, servings: number): Promise<Recipe> {
+    let procura = store.recipes.find((c) => c.id == id);/* verifica de a receita existe se existe retorna a receita se nao returna undefined */
+    if (!procura) {/* lança o erro se for undefined */
       throw new Error("Recipe not found");
     }
-    ///Verificação status so pode escalonar receitas publicas
+    /* Verificação status so pode escalonar receitas publicas */
     if (procura.status !== "published") {
       throw new Error("You can only scale published recipes");
     }
-    ///
-    if (servings <= 0) {//verifica se a porção e menos que zero se for lança um erro
+    
+    if (servings <= 0) {/* verifica se a porção e menos que zero se for lança um erro */
       throw new Error("portions must be greater than zero");
     } else {
 
-      let novo: { ingredientId: string; quantity: number; unit: string }[] = [];//Array de objeto que começa vazio
+      let novo: { ingredientId: string; quantity: number; unit: string }[] = [];/* Array de objeto que começa vazio */
 
-      let clonar = [...procura.ingredients];//copia so ingredientes sem mecher com as receitas originais
+      let clonar = [...procura.ingredients];/* copia so ingredientes sem mecher com as receitas originais */
 
-      let fator = servings / procura.servings;//calculo do escalonamento
+      let fator = servings / procura.servings;/* calculo do escalonamento */
 
-      clonar.forEach((c) => {//for que cria um objeto com id, unit, e quantity ja calculada
+      clonar.forEach((c) => {/* for que cria um objeto com id, unit, e quantity ja calculada */
         let novoR = {
           ingredientId: c.ingredientId,
           quantity: c.quantity * fator,
           unit: c.unit
         }
-        novo.push(novoR);//adiciona do array [novo]
+        novo.push(novoR);/* adiciona do array [novo] */
       })
 
-      let receitaEscalonada: Recipe = {//cria mais um objeto final com o receita completa pra returnar
+      let receitaEscalonada: Recipe = {/* cria mais um objeto final com o receita completa pra returnar */
         ...procura,
-        ingredients: novo,//substitui pelo novo
-        servings: servings//substitui pelo novo
+        ingredients: novo,/* substitui pelo novo */
+        servings: servings/* substitui pelo novo */
       }
-      return receitaEscalonada;//retorna receita escalonada
+      return receitaEscalonada;/* retorna receita escalonada */
     }
-  }//
+  }
 
-  ///Novo metodo lista de compra
-  async listaCompra(ids: string[]): Promise<{ ingredientId: string; quantity: number; unit: string }[]> {
+  /* Novo metodo lista de compra */
+  async shoppingList(ids: string[]): Promise<{ ingredientId: string; quantity: number; unit: string }[]> {
 
     let lista: { ingredientId: string; quantity: number; unit: string }[] = [];
 
     for (const id of ids) {
-      const existe = store.recipes.find(itens => itens.id == id);//verifica de a receita existe se existe retorna a receita se nao returna undefined
+      const existe = store.recipes.find(itens => itens.id == id);/* verifica de a receita existe se existe retorna a receita se nao returna undefined */
 
       if (!existe) {
         throw new Error('ID not found');
       }
-      ///Verificação status e publica se for diferente lança o erro 
+      /* Verificação status e publica se for diferente lança o erro */ 
       if (existe.status !== "published") {
         throw new Error(`Recipe ${id} is not published`);
       }
-      ///
+      
       for (const ingrediente of existe.ingredients) {
 
         let encontrado = false;
 
         for (const item of lista) {
-          if (ingrediente.ingredientId == item.ingredientId && ingrediente.unit == item.unit) {//se id for o mesmo e unit for o mesmo entao eu soma
+          if (ingrediente.ingredientId == item.ingredientId && ingrediente.unit == item.unit) {/* se id for o mesmo e unit for o mesmo entao eu soma */
             encontrado = true;
             item.quantity = item.quantity + ingrediente.quantity;
           }
         }
-        if (encontrado == false) {// se nao for eu adiciono como novo ingrediente na lista
+        if (encontrado == false) {/* se nao for eu adiciono como novo ingrediente na lista */
           lista.push({
             ingredientId: ingrediente.ingredientId,
             quantity: ingrediente.quantity,
@@ -270,30 +270,30 @@ export class RecipeService implements IRecipeService {
     return lista;//retorna a lista
   }
 
-  /// Metodo publicar
-  async publicar(id: string): Promise<Recipe> {
-    let procura = store.recipes.find((c) => c.id == id);//verifica de a receita existe se existe retorna a receita se nao returna undefined
+  /* Metodo publicar receitas */
+  async publish(id: string): Promise<Recipe> {
+    let procura = store.recipes.find((c) => c.id == id);/* verifica de a receita existe se existe retorna a receita se nao returna undefined */
 
     if (!procura) {
       throw new Error("Recipe not found");
     }
-    //verifica se o receita e draft. So pode publicar receitas draft
-    if (procura.status !== "draft") {
+    /* verifica se o receita e draft. So pode publicar receitas rascunho */
+    if (procura.status !== "draft") { /* rascunho -> publicar*/
       throw new Error("You can only publish draft recipes");
     }
     procura.status = "published";
     return procura;
   }
 
-  ///Metodo archivar
-  async archivar(id: string): Promise<Recipe> {
+  /* Metodo publicar receitas */
+  async archive(id: string): Promise<Recipe> {
     let procura = store.recipes.find((c) => c.id == id);
 
     if (!procura) {
       throw new Error("Recipe not found");
     }
-    //verifica se o receita e publica. So pode arquivar receitas publicas
-    if (procura.status !== "published") {
+    /* verifica se o receita e publica. So pode arquivar receitas publicas */
+    if (procura.status !== "published") { /* publicar -> arquivar*/
       throw new Error("You can only archive published recipes");
     }
     procura.status = "archived";

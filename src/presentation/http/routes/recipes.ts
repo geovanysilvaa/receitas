@@ -3,38 +3,39 @@ import { IRecipeService } from "../../../core/interfaces/IRecipeService.js"
 
 export function recipesRoutes(service: IRecipeService) {
   const router = Router()
-   ///endpoint nova de public/status
-  router.patch("/:id/public", async (req, res, next) => {
+
+   /* endpoint nova pra publicar receita */
+  router.patch("/:id/publish", async (req, res, next) => {
     try {
-      const item = await service.publicar(req.params.id)
+      const item = await service.publish(req.params.id)
       res.json(item)
     } catch (error) {
       next(error)
     }
   })
-  ///
-  ///endpoint nova de archive/status
-  router.patch("/:id/archived", async (req, res, next) => {
+  
+  /* endpoint nova pra arquivar receita */
+  router.patch("/:id/archive", async (req, res, next) => {
     try {
-      const item = await service.archivar(req.params.id)
+      const item = await service.archive(req.params.id)
       res.json(item)
     } catch (error) {
       next(error)
     }
   })
-///
-  ///endpoint nova do escalonamento 
+
+  /* endpoint nova do escalonamento */
   router.post("/:id/scale", async (req, res, next) => {
     try {
       const servings = Number(req.body.servings)
-      const items = await service.escalonamento(req.params.id,servings)
+      const items = await service.scaleRecipes(req.params.id,servings)
       res.json(items)
     } catch (error) {
       next(error)
     }
   })
-///
-  router.get("/", async (req, res, next) => {/// List Recipe[CategoryName] e List Recipes
+
+  router.get("/", async (req, res, next) => {
     try {
       const items = await service.list({
         categoryId: req.query.categoryId as string | undefined,
@@ -47,7 +48,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.get("/:id", async (req, res, next) => {/// Show Recipe
+  router.get("/:id", async (req, res, next) => {
     try {
       const item = await service.get(req.params.id)
       res.json(item)
@@ -58,11 +59,14 @@ export function recipesRoutes(service: IRecipeService) {
 
   router.post("/", async (req, res, next) => {
     try {
-      if (Array.isArray(req.body.recipeIds)) {///Lista de compras. Reaproveitando endpoint
-        const items = await service.listaCompra(req.body.recipeIds)
+      
+      if (Array.isArray(req.body.recipeIds)) {/* Lista de compras. Reaproveitando endpoint ja com create recipes*/
+        const items = await service.shoppingList(req.body.recipeIds)
         res.status(201).json(items)
+
       } else {
-        const item = await service.create({//Create Recipe
+
+        const item = await service.create({
           title: String(req.body.title ?? ""),
           description: req.body.description,
           ingredients: Array.isArray(req.body.ingredients)
@@ -83,7 +87,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.put("/:id", async (req, res, next) => {//Update Recipe
+  router.put("/:id", async (req, res, next) => {
     try {
       const item = await service.update(req.params.id, {
         title: req.body.title,
@@ -99,7 +103,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.delete("/:id", async (req, res, next) => {//Delete Recipe
+  router.delete("/:id", async (req, res, next) => {
     try {
       await service.delete(req.params.id)
       res.status(204).send()
