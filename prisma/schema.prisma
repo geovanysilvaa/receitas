@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  recipes   Recipe[]
+}
+
+model Ingredient {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  recipes   RecipeIngredient[]
+}
+
+model Recipe {
+  id          String                  @id @default(uuid())
+  title       String
+  description String?
+  servings    Int
+  status      String
+  createdAt   DateTime                @default(now())
+  category    Category                @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  ingredients RecipeIngredient[]
+  steps       String[]
+}
+
+model RecipeIngredient {
+  id           String     @id @default(uuid())
+  recipe       Recipe     @relation(fields: [recipeId], references: [id])
+  recipeId     String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId String
+  quantity     Float
+  unit         String
+}

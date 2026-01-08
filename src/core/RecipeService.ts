@@ -1,302 +1,281 @@
-import crypto from "node:crypto"
-import { store } from "./store.js"
-import { Recipe, CreateRecipeInput } from "./models.js"
-import { CategoryService } from "./CategoryService.js"
-import { IngredientService } from "./IngredientService.js"
-import { IRecipeService } from "./interfaces/IRecipeService.js"
+import { prisma } from "./lib/prisma.js";
+import type { Recipe, CreateRecipeInput } from "./models.js";
 
-
-export class RecipeService implements IRecipeService {
-  private categoryService = new CategoryService()
-  private ingredientService = new IngredientService()
-
+export class RecipeService {
   async list(filter?: { categoryId?: string; categoryName?: string; search?: string }): Promise<Recipe[]> {
-    let categoryId = filter?.categoryId
+    const where: any = { status: "published" };
+
+    if (filter?.categoryId) {
+      where.categoryId = filter.categoryId;
+    }
 
     if (filter?.categoryName) {
-      const category = await this.categoryService.findByName(filter.categoryName.trim())
-      if (category) {
-        categoryId = category.id
-      } else {
-        return []
-      }
+      const category = await prisma.category.findUnique({ where: { name: filter.categoryName } });
+      if (!category) return [];
+      where.categoryId = category.id;
     }
 
-    let items = [...store.recipes]
+    let recipes = await prisma.recipe.findMany({
+      where,
+      include: { ingredients: true, category: true }
+    });
 
-    if (categoryId) {
-      items = items.filter(r => r.categoryId === categoryId)
-    }
-
-    if (filter?.search) {
-      const searchQuery = filter.search.trim().toLowerCase()
-      const allIngredients = await this.ingredientService.list()
-      const nameById = new Map(allIngredients.map((ing) => [ing.id, ing.name.toLowerCase()]))
-
-      items = items.filter((recipe) => {
-        if (recipe.title.toLowerCase().includes(searchQuery)) return true
-        if (recipe.description && recipe.description.toLowerCase().includes(searchQuery)) return true
-        return recipe.ingredients.some((ingredient) => {
-          const name = nameById.get(ingredient.ingredientId)
-          return !!name && name.includes(searchQuery)
-        })
-      })
-    }
-    /* Filtra apenas receitas publicas */
-    let fReceita = items.filter(receitas => receitas.status == 'published');
-    return fReceita;
-
+    return recipes.map(r => ({
+      id: r.id,
+      title: r.title,
+      description: r.description ?? undefined,
+      ingredients: r.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity,
+        unit: i.unit
+      })),
+      steps: r.steps,
+      servings: r.servings,
+      categoryId: r.categoryId,
+      createdAt: r.createdAt,
+      status: r.status as 'draft' | 'published' | 'archived'
+    }));
   }
 
   async get(id: string): Promise<Recipe> {
-    const found = store.recipes.find(r => r.id === id)
-    if (!found) throw new Error("Recipe not found")
-    /* Verificação status da receitas apenas publicas */
-    if (found.status !== "published") {
-      throw new Error("Only published recipes can be accessed");
-    }
-  
-    return found
+    const r = await prisma.recipe.findUnique({ where: { id }, include: { ingredients: true, category: true } });
+    if (!r) throw new Error("Recipe not found");
+    if (r.status !== "published") throw new Error("Only published recipes can be accessed");
+
+    return {
+      id: r.id,
+      title: r.title,
+      description: r.description ?? undefined,
+      ingredients: r.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity,
+        unit: i.unit
+      })),
+      steps: r.steps,
+      servings: r.servings,
+      categoryId: r.categoryId,
+      createdAt: r.createdAt,
+      status: r.status as 'draft' | 'published' | 'archived'
+    };
   }
 
   async create(input: CreateRecipeInput): Promise<Recipe> {
-    const title = input.title.trim()
-    if (!title) throw new Error("Title is required")
+    const category = await prisma.category.findUnique({ where: { id: input.categoryId } });
+    if (!category) throw new Error("Category does not exist");
 
-    /* Validate Category */
-    const category = await this.categoryService.get(input.categoryId).catch(() => null)
-    if (!category) throw new Error("Category does not exist")
-
-    /* Process Ingredients */
-    const incoming = Array.isArray(input.ingredients)
-      ? input.ingredients.map((i) => ({
-        name: String(i.name ?? "").trim(),
-        quantity: Number(i.quantity ?? 0),
-        unit: String(i.unit ?? "").trim(),
-      }))
-      : []
-
-    if (incoming.length === 0) throw new Error("Ingredients are required")
-
-    incoming.forEach((i) => {
-      if (!i.name) throw new Error("Ingredient name is required")
-      if (!(i.quantity > 0)) throw new Error("Ingredient quantity must be > 0")
-      if (!i.unit) throw new Error("Ingredient unit is required")
-    })
-
-    const resolved = [] as { ingredientId: string; quantity: number; unit: string }[]
-    for (const i of incoming) {
-      const existing = await this.ingredientService.findByName(i.name)
-      const ingredient = existing ?? (await this.ingredientService.create({ name: i.name }))
-      resolved.push({ ingredientId: ingredient.id, quantity: i.quantity, unit: i.unit })
+    const resolvedIngredients = [];
+    for (const i of input.ingredients) {
+      let ingredient = await prisma.ingredient.findUnique({ where: { name: i.name } });
+      if (!ingredient) ingredient = await prisma.ingredient.create({ data: { name: i.name } });
+      resolvedIngredients.push({
+        ingredientId: ingredient.id,
+        quantity: i.quantity,
+        unit: i.unit
+      });
     }
 
-    const steps = Array.isArray(input.steps) ? input.steps.map((s) => String(s)) : []
+    const r = await prisma.recipe.create({
+      data: {
+        title: input.title,
+        description: input.description,
+        servings: input.servings,
+        steps: input.steps,
+        categoryId: input.categoryId,
+        status: "draft",
+        ingredients: { create: resolvedIngredients }
+      },
+      include: { ingredients: true, category: true }
+    });
 
-    const servings = Number(input.servings)
-    if (!(servings > 0)) throw new Error("Servings must be greater than 0")
-
-    const recipe: Recipe = {
-      id: crypto.randomUUID(),
-      title,
-      description: input.description,
-      ingredients: resolved,
-      steps,
-      servings,
-      categoryId: input.categoryId,
-      createdAt: new Date(),
-      status: 'draft'/* Propriedade status começa com rascunho */
-    }
-
-    store.recipes.push(recipe)
-    return recipe
+    return {
+      id: r.id,
+      title: r.title,
+      description: r.description ?? undefined,
+      ingredients: r.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity,
+        unit: i.unit
+      })),
+      steps: r.steps,
+      servings: r.servings,
+      categoryId: r.categoryId,
+      createdAt: r.createdAt,
+      status: r.status as 'draft' | 'published' | 'archived'
+    };
   }
 
   async update(id: string, data: Partial<CreateRecipeInput>): Promise<Recipe> {
-    const idx = store.recipes.findIndex(r => r.id === id)
-    if (idx < 0) throw new Error("Recipe not found")
+    const r = await prisma.recipe.findUnique({ where: { id }, include: { ingredients: true } });
+    if (!r) throw new Error("Recipe not found");
+    if (r.status !== "draft") throw new Error("Only draft recipes can be edited");
 
-    const current = store.recipes[idx]
-
-    /* Verificação status receitas so pode editar receitas draft */
-    if (current.status !== "draft") {
-      throw new Error("Only draft recipes can be edited");
-    }
-    
-
-    const updated = { ...current }
-
+    const updatedData: any = {};
+    if (data.title) updatedData.title = data.title;
+    if (data.description !== undefined) updatedData.description = data.description;
+    if (data.servings) updatedData.servings = data.servings;
+    if (data.steps) updatedData.steps = data.steps;
     if (data.categoryId) {
-      const category = await this.categoryService.get(data.categoryId).catch(() => null)
-      if (!category) throw new Error("Category does not exist")
-      updated.categoryId = data.categoryId
+      const category = await prisma.category.findUnique({ where: { id: data.categoryId } });
+      if (!category) throw new Error("Category does not exist");
+      updatedData.categoryId = data.categoryId;
     }
 
-    if (data.title !== undefined) {
-      const title = data.title.trim()
-      if (!title) throw new Error("Title is required")
-      updated.title = title
-    }
-
-    if (data.description !== undefined) {
-      updated.description = data.description
-    }
-
-    if (data.steps !== undefined) {
-      updated.steps = Array.isArray(data.steps) ? [...data.steps] : []
-    }
-
-    if (data.servings !== undefined) {
-      const servings = Number(data.servings)
-      if (!(servings > 0)) throw new Error("Servings must be greater than 0")
-      updated.servings = servings
-    }
-
-    if (data.ingredients !== undefined) {
-      const incoming = Array.isArray(data.ingredients)
-        ? data.ingredients.map((i) => ({
-          name: String(i.name ?? "").trim(),
-          quantity: Number(i.quantity ?? 0),
-          unit: String(i.unit ?? "").trim(),
-        }))
-        : []
-
-      incoming.forEach((i) => {
-        if (!i.name) throw new Error("Ingredient name is required")
-        if (!(i.quantity > 0)) throw new Error("Ingredient quantity must be > 0")
-        if (!i.unit) throw new Error("Ingredient unit is required")
-      })
-
-      const resolved = [] as { ingredientId: string; quantity: number; unit: string }[]
-      for (const i of incoming) {
-        const existing = await this.ingredientService.findByName(i.name)
-        const ingredient = existing ?? (await this.ingredientService.create({ name: i.name }))
-        resolved.push({ ingredientId: ingredient.id, quantity: i.quantity, unit: i.unit })
+    if (data.ingredients) {
+      await prisma.recipeIngredient.deleteMany({ where: { recipeId: id } });
+      const ingredientsToCreate = [];
+      for (const i of data.ingredients) {
+        let ingredient = await prisma.ingredient.findUnique({ where: { name: i.name } });
+        if (!ingredient) ingredient = await prisma.ingredient.create({ data: { name: i.name } });
+        ingredientsToCreate.push({
+          ingredientId: ingredient.id,
+          quantity: i.quantity,
+          unit: i.unit
+        });
       }
-      updated.ingredients = resolved
+      updatedData.ingredients = { create: ingredientsToCreate };
     }
 
-    store.recipes[idx] = updated
-    return updated
+    const updated = await prisma.recipe.update({
+      where: { id },
+      data: updatedData,
+      include: { ingredients: true, category: true }
+    });
+
+    return {
+      id: updated.id,
+      title: updated.title,
+      description: updated.description ?? undefined,
+      ingredients: updated.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity,
+        unit: i.unit
+      })),
+      steps: updated.steps,
+      servings: updated.servings,
+      categoryId: updated.categoryId,
+      createdAt: updated.createdAt,
+      status: updated.status as 'draft' | 'published' | 'archived'
+    };
   }
 
   async delete(id: string): Promise<void> {
-    const idx = store.recipes.findIndex(r => r.id === id)
-    const copia = store.recipes[idx]
-    if (idx < 0) throw new Error("ID does not exist")
+    const recipe = await prisma.recipe.findUnique({
+      where: { id }
+    })
 
-    /* Verificação status receitas so podem deletar receitas em racunho */
-    if (copia.status !== "draft") {
-      throw new Error('You can only delete draft recipes')
+    if (!recipe) throw new Error("Recipe not found")
+
+    if (recipe.status !== "draft") {
+      throw new Error("You can only delete draft recipes")
     }
-  
-    store.recipes.splice(idx, 1)
+
+    await prisma.recipeIngredient.deleteMany({
+      where: { recipeId: id }
+    })
+
+    await prisma.recipe.delete({
+      where: { id }
+    })
   }
 
-  /* novo metodo de escalonamento */
+
+  async publish(id: string): Promise<Recipe> {
+    const r = await prisma.recipe.findUnique({ where: { id } });
+    if (!r) throw new Error("Recipe not found");
+    if (r.status !== "draft") throw new Error("You can only publish draft recipes");
+
+    const updated = await prisma.recipe.update({ where: { id }, data: { status: "published" }, include: { ingredients: true, category: true } });
+    return {
+      id: updated.id,
+      title: updated.title,
+      description: updated.description ?? undefined,
+      ingredients: updated.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity,
+        unit: i.unit
+      })),
+      steps: updated.steps,
+      servings: updated.servings,
+      categoryId: updated.categoryId,
+      createdAt: updated.createdAt,
+      status: updated.status as 'draft' | 'published' | 'archived'
+    };
+  }
+
+  async archive(id: string): Promise<Recipe> {
+    const r = await prisma.recipe.findUnique({ where: { id } });
+    if (!r) throw new Error("Recipe not found");
+    if (r.status !== "published") throw new Error("You can only archive published recipes");
+
+    const updated = await prisma.recipe.update({ where: { id }, data: { status: "archived" }, include: { ingredients: true, category: true } });
+    return {
+      id: updated.id,
+      title: updated.title,
+      description: updated.description ?? undefined,
+      ingredients: updated.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity,
+        unit: i.unit
+      })),
+      steps: updated.steps,
+      servings: updated.servings,
+      categoryId: updated.categoryId,
+      createdAt: updated.createdAt,
+      status: updated.status as 'draft' | 'published' | 'archived'
+    };
+  }
+
   async scaleRecipes(id: string, servings: number): Promise<Recipe> {
-    let procura = store.recipes.find((c) => c.id == id);/* verifica de a receita existe se existe retorna a receita se nao returna undefined */
-    if (!procura) {/* lança o erro se for undefined */
-      throw new Error("Recipe not found");
-    }
-    /* Verificação status so pode escalonar receitas publicas */
-    if (procura.status !== "published") {
-      throw new Error("You can only scale published recipes");
-    }
+    const r = await prisma.recipe.findUnique({ where: { id }, include: { ingredients: true } });
+
+    if (!r) throw new Error("Recipe not found");
     
-    if (servings <= 0) {/* verifica se a porção e menos que zero se for lança um erro */
-      throw new Error("portions must be greater than zero");
-    } else {
+    if (r.status !== "published") throw new Error("You can only scale published recipes");
 
-      let novo: { ingredientId: string; quantity: number; unit: string }[] = [];/* Array de objeto que começa vazio */
+    const factor = servings / r.servings;
 
-      let clonar = [...procura.ingredients];/* copia so ingredientes sem mecher com as receitas originais */
-
-      let fator = servings / procura.servings;/* calculo do escalonamento */
-
-      clonar.forEach((c) => {/* for que cria um objeto com id, unit, e quantity ja calculada */
-        let novoR = {
-          ingredientId: c.ingredientId,
-          quantity: c.quantity * fator,
-          unit: c.unit
-        }
-        novo.push(novoR);/* adiciona do array [novo] */
-      })
-
-      let receitaEscalonada: Recipe = {/* cria mais um objeto final com o receita completa pra returnar */
-        ...procura,
-        ingredients: novo,/* substitui pelo novo */
-        servings: servings/* substitui pelo novo */
-      }
-      return receitaEscalonada;/* retorna receita escalonada */
-    }
+    return {
+      id: r.id,
+      title: r.title,
+      description: r.description ?? undefined,
+      ingredients: r.ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity * factor,
+        unit: i.unit
+      })),
+      steps: r.steps,
+      servings,
+      categoryId: r.categoryId,
+      createdAt: r.createdAt,
+      status: r.status as 'draft' | 'published' | 'archived'
+    };
   }
 
-  /* Novo metodo lista de compra */
   async shoppingList(ids: string[]): Promise<{ ingredientId: string; quantity: number; unit: string }[]> {
 
-    let lista: { ingredientId: string; quantity: number; unit: string }[] = [];
+    const lista: { ingredientId: string; quantity: number; unit: string }[] = [];
 
     for (const id of ids) {
-      const existe = store.recipes.find(itens => itens.id == id);/* verifica de a receita existe se existe retorna a receita se nao returna undefined */
+      const existe = await prisma.recipe.findUnique({ where: { id }, include: { ingredients: true } });
 
-      if (!existe) {
-        throw new Error('ID not found');
-      }
-      /* Verificação status e publica se for diferente lança o erro */ 
-      if (existe.status !== "published") {
+      if (!existe){
+        throw new Error(`Recipe ${id} not found`);
+      } 
+      if (existe.status !== "published"){
         throw new Error(`Recipe ${id} is not published`);
-      }
-      
-      for (const ingrediente of existe.ingredients) {
+      } 
 
-        let encontrado = false;
+      for (const ing of existe.ingredients) {
 
-        for (const item of lista) {
-          if (ingrediente.ingredientId == item.ingredientId && ingrediente.unit == item.unit) {/* se id for o mesmo e unit for o mesmo entao eu soma */
-            encontrado = true;
-            item.quantity = item.quantity + ingrediente.quantity;
-          }
-        }
-        if (encontrado == false) {/* se nao for eu adiciono como novo ingrediente na lista */
-          lista.push({
-            ingredientId: ingrediente.ingredientId,
-            quantity: ingrediente.quantity,
-            unit: ingrediente.unit
-          });
+        const existing = lista.find(item => item.ingredientId === ing.ingredientId && item.unit === ing.unit);
+
+        if (existing) {
+          existing.quantity = existing.quantity + ing.quantity;
+        } else {
+          lista.push({ ingredientId: ing.ingredientId, quantity: ing.quantity, unit: ing.unit });
         }
       }
     }
-    return lista;//retorna a lista
-  }
-
-  /* Metodo publicar receitas */
-  async publish(id: string): Promise<Recipe> {
-    let procura = store.recipes.find((c) => c.id == id);/* verifica de a receita existe se existe retorna a receita se nao returna undefined */
-
-    if (!procura) {
-      throw new Error("Recipe not found");
-    }
-    /* verifica se o receita e draft. So pode publicar receitas rascunho */
-    if (procura.status !== "draft") { /* rascunho -> publicar*/
-      throw new Error("You can only publish draft recipes");
-    }
-    procura.status = "published";
-    return procura;
-  }
-
-  /* Metodo publicar receitas */
-  async archive(id: string): Promise<Recipe> {
-    let procura = store.recipes.find((c) => c.id == id);
-
-    if (!procura) {
-      throw new Error("Recipe not found");
-    }
-    /* verifica se o receita e publica. So pode arquivar receitas publicas */
-    if (procura.status !== "published") { /* publicar -> arquivar*/
-      throw new Error("You can only archive published recipes");
-    }
-    procura.status = "archived";
-    return procura;
+    return lista;
   }
 }
